@@ -19,9 +19,47 @@ class Produto:
         return (self.preco + self.calcular_imposto()) * self.quantidade
 
 class Estoque:
-    def __init__(self, cod_product, valor):
-        self.cod_product = cod_product
-        self.valor = valor
+    def __init__(self):
+        self.produtos = {}
+
+    def cadastrar_produto(self, id_produto, nome, preco, quantidade):
+        if id_produto in self.produtos:
+            raise ValueError("Produto já cadastrado.")
+        if preco < 0 or quantidade < 0:
+            raise ValueError("Preço e quantidade devem ser não negativos.")
+        self.produtos[id_produto] = {
+            'nome': nome,
+            'preco': preco,
+            'quantidade': quantidade
+        }
+
+    def entrada_estoque(self, id_produto, quantidade):
+        if id_produto not in self.produtos:
+            raise KeyError("Produto não encontrado.")
+        if quantidade <= 0:
+            raise ValueError("Quantidade deve ser positiva.")
+        self.produtos[id_produto]['quantidade'] += quantidade
+
+    def saida_estoque(self, id_produto, quantidade):
+        if id_produto not in self.produtos:
+            raise KeyError("Produto não encontrado.")
+        if quantidade <= 0:
+            raise ValueError("Quantidade deve ser positiva.")
+        if quantidade > self.produtos[id_produto]['quantidade']:
+            raise ValueError("Estoque insuficiente.")
+        self.produtos[id_produto]['quantidade'] -= quantidade
+
+    def listar_produtos(self):
+        if not self.produtos:
+            print("Nenhum produto cadastrado.")
+            return
+        print("\n--- Lista de Produtos ---")
+        for id_produto, dados in self.produtos.items():
+            print(f"ID: {id_produto}")
+            print(f"Nome: {dados['nome']}")
+            print(f"Preço: R$ {dados['preco']:.2f}")
+            print(f"Quantidade em estoque: {dados['quantidade']}")
+            print("------------------------")
 
 
 clientes = []
