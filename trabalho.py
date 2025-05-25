@@ -63,7 +63,7 @@ class Estoque:
 
 
 clientes = []
-produtos = []
+estoque = Estoque()
 
 def cadastrar_cliente():
     print("\n--- Cadastro de Cliente ---")
@@ -79,6 +79,7 @@ def cadastrar_cliente():
 
 def cadastrar_produto():
     print("\n--- Cadastro de Produto ---")
+    id_produto = input("ID produto: ")
     nome = input("Nome do produto: ")
 
     try:
@@ -89,24 +90,24 @@ def cadastrar_produto():
         return
 
     if nome != "":
-        novo_produto = Produto(nome, preco, quantidade)
-        produtos.append(novo_produto)
+        estoque.cadastrar_produto(id_produto, nome, preco, quantidade)
         print("Produto cadastrado com sucesso!")
     else:
         print("O nome do produto não pode estar vazio.")
 
 def mostrar_produtos():
     print("\n--- Lista de Produtos ---")
-    if len(produtos) == 0:
+    if not estoque.produtos:
         print("Nenhum produto cadastrado ainda.")
     else:
-        for i, p in enumerate(produtos):
-            print(f"\nProduto {i+1}:")
-            print("Nome:", p.nome)
-            print("Preço: R$", round(p.preco, 2))
-            print("Quantidade:", p.quantidade)
-            print("Imposto: R$", round(p.calcular_imposto(), 2))
-            print("Preço final com imposto: R$", round(p.preco_final(), 2))
+        for id_produto, p in estoque.produtos.items():
+            produto_temp = Produto(p['nome'], p['preco'], p['quantidade'])
+            print(f"\nProduto {id_produto}")
+            print("Nome:", produto_temp.nome)
+            print("Preço: R$", round(produto_temp.preco, 2))
+            print("Quantidade:", produto_temp.quantidade)
+            print("Imposto: R$", round(produto_temp.calcular_imposto(), 2))
+            print("Preço final com imposto: R$", round(produto_temp.preco_final(), 2))
 
 def menu():
     while True:
